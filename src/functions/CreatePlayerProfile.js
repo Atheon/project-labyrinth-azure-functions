@@ -30,12 +30,12 @@ app.http('CreatePlayerProfile', {
             context.log(`[CreatePlayerProfile] PlayFabId=${PlayFabId}`);
 
             const existingData = await new Promise((resolve, reject) => {
-                server.GetUserInternalData({ PlayFabId }, (err, result) => {
+                server.GetUserReadOnlyData({ PlayFabId }, (err, result) => {
                     if (err) {
-                        context.log.error('[CreatePlayerProfile] GetUserInternalData error:', err);
+                        context.log.error('[CreatePlayerProfile] GetUserReadOnlyData error:', err);
                         return reject(err);
                     }
-                    context.log('[CreatePlayerProfile] GetUserInternalData result:', JSON.stringify(result?.data));
+                    context.log('[CreatePlayerProfile] GetUserReadOnlyData result:', JSON.stringify(result?.data));
                     resolve(result?.data?.Data || {});
                 });
             });
@@ -72,11 +72,11 @@ app.http('CreatePlayerProfile', {
                     Initialized: "true"
                 };
                 await new Promise((resolve, reject) => {
-                    server.UpdateUserInternalData(
+                    server.UpdateUserReadOnlyData(
                         { PlayFabId, Data: initialData },
                         (err, result) => {
                             if (err) {
-                                context.log.error('[CreatePlayerProfile] UpdateUserInternalData error:', err);
+                                context.log.error('[CreatePlayerProfile] UpdateUserReadOnlyData error:', err);
                                 return reject(err);
                             }
                             context.log('[CreatePlayerProfile] Profile created');
