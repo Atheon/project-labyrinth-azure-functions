@@ -48,10 +48,28 @@ app.http('CreatePlayerProfile', {
                 alreadyInitialized = true;
             } else {
                 context.log('[CreatePlayerProfile] Creating new profile');
+
+                context.log('[CreatePlayerProfile] Granting initial character');
+                await new Promise((resolve, reject) => {
+                    server.GrantItemsToUser(
+                        {
+                            PlayFabId: PlayFabId,
+                            CatalogVersion: "characters",
+                            ItemIds: ["character_vessel"]
+                        },
+                        (err, result) => {
+                            if (err) {
+                                context.log.error('[CreatePlayerProfile] GrantItemsToUser error:', err);
+                                return reject(err);
+                            }
+                            context.log('[CreatePlayerProfile] Initial character granted:', JSON.stringify(result?.data));
+                            resolve(result);
+                        }
+                    );
+                });
+
                 const initialData = {
-                    Initialized: "true",
-                    InventoryV2Ready: "true",
-                    EconomyV2Ready: "true"
+                    Initialized: "true"
                 };
                 await new Promise((resolve, reject) => {
                     server.UpdateUserInternalData(
