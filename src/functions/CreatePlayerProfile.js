@@ -68,6 +68,25 @@ app.http('CreatePlayerProfile', {
                     );
                 });
 
+                context.log('[CreatePlayerProfile] Granting initial quest');
+                await new Promise((resolve, reject) => {
+                    server.GrantItemsToUser(
+                        {
+                            PlayFabId: PlayFabId,
+                            CatalogVersion: "quests",
+                            ItemIds: ["quest_exit_sewers"]
+                        },
+                        (err, result) => {
+                            if (err) {
+                                context.log.error('[CreatePlayerProfile] GrantItemsToUser (quest) error:', err);
+                                return reject(err);
+                            }
+                            context.log('[CreatePlayerProfile] Initial quest granted:', JSON.stringify(result?.data));
+                            resolve(result);
+                        }
+                    );
+                });
+
                 const initialData = {
                     Initialized: "true"
                 };
