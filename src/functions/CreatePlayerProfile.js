@@ -87,15 +87,37 @@ app.http('CreatePlayerProfile', {
                     );
                 });
 
-                const initialData = {
-                    Initialized: "true"
+                const readOnlyData = {
+                    Initialized: "true",
                 };
                 await new Promise((resolve, reject) => {
                     server.UpdateUserReadOnlyData(
-                        { PlayFabId, Data: initialData },
+                        { PlayFabId, Data: readOnlyData },
                         (err, result) => {
                             if (err) {
                                 context.log.error('[CreatePlayerProfile] UpdateUserReadOnlyData error:', err);
+                                return reject(err);
+                            }
+                            context.log('[CreatePlayerProfile] Read-only data updated');
+                            resolve(result);
+                        }
+                    );
+                });
+
+                const userData = {
+                    Backpack: "",
+                    BackpackItems: JSON.stringify([]),
+                    EquippedGear: JSON.stringify({
+                        PrimaryHand: "",
+                        SecondaryHand: "",
+                    }),
+                };
+                await new Promise((resolve, reject) => {
+                    server.UpdateUserData(
+                        { PlayFabId, Data: userData },
+                        (err, result) => {
+                            if (err) {
+                                context.log.error('[CreatePlayerProfile] UpdateUserData error:', err);
                                 return reject(err);
                             }
                             context.log('[CreatePlayerProfile] Profile created');

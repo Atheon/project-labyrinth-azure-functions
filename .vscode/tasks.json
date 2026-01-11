@@ -1,0 +1,36 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Azure Login",
+      "type": "shell",
+      "command": "az login --tenant 319c4924-0b30-4647-ad7f-f3d0c8d83403",
+      "problemMatcher": []
+    },
+    {
+      "label": "Publish to Azure Function App",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -Command \"func azure functionapp publish PlayFabFunctionsWEU\"",
+      "problemMatcher": []
+    },
+    {
+      "type": "func",
+      "label": "func: host start",
+      "command": "host start",
+      "problemMatcher": "$func-node-watch",
+      "isBackground": true,
+      "dependsOn": "npm install (functions)"
+    },
+    {
+      "type": "shell",
+      "label": "npm install (functions)",
+      "command": "npm install"
+    },
+    {
+      "type": "shell",
+      "label": "npm prune (functions)",
+      "command": "npm prune --production",
+      "problemMatcher": []
+    }
+  ]
+}
